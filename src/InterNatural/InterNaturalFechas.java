@@ -34,7 +34,6 @@ public class InterNaturalFechas {
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        //JOptionPane.showMessageDialog(null, "Ordenamiento finalizado!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private int contarRegistros(File F) throws FileNotFoundException, IOException {
