@@ -6,8 +6,13 @@
 package InterfazGrafica;
 
 import PrincipalEjecuccion.*;
+import com.csvreader.CsvReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -16,9 +21,11 @@ import javax.swing.JOptionPane;
 public class PantallaPrincipal extends javax.swing.JFrame {
 
     private static String campoOrdenamiento;
-    private static String ruta;
+    private static String ruta=null;
     private static String algoritmo;
     private static boolean obtencionCorrecta;
+    private static int vecesOrdenar = 1;
+    private static boolean ejecutar = true;
 
     /**
      * Creates new form PantallaPrincipal
@@ -38,26 +45,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabelRutaDelArchivo = new javax.swing.JLabel();
         jButtonSalirAplicacion = new javax.swing.JButton();
         jButtonRealizarOrdenamiento = new javax.swing.JButton();
         jLabelCampoAOrdenar = new javax.swing.JLabel();
-        jTextFieldRutaDelArchivo = new javax.swing.JTextField();
         jComboBoxCampoOrdenamiento = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jComboBoxAlgoritmo = new javax.swing.JComboBox<>();
+        jButtonBotonBuscarRuta = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldNombreArchivo = new javax.swing.JTextField();
+        jTextFieldVecesEjecutar = new javax.swing.JTextField();
         jLabelFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ordenamientos Externos");
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabelRutaDelArchivo.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabelRutaDelArchivo.setText("Ruta absoluta de la carpeta del archivo: ");
-        getContentPane().add(jLabelRutaDelArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, 50));
 
         jButtonSalirAplicacion.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jButtonSalirAplicacion.setText("Salir");
@@ -66,7 +68,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButtonSalirAplicacionActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalirAplicacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 330, 120, 30));
+        getContentPane().add(jButtonSalirAplicacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 330, 120, 30));
 
         jButtonRealizarOrdenamiento.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jButtonRealizarOrdenamiento.setText("Ordenar");
@@ -75,14 +77,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButtonRealizarOrdenamientoActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonRealizarOrdenamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 330, 180, 30));
+        getContentPane().add(jButtonRealizarOrdenamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, 180, 30));
 
         jLabelCampoAOrdenar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabelCampoAOrdenar.setText("Campo de ordenamiento");
-        getContentPane().add(jLabelCampoAOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 240, -1, -1));
-
-        jTextFieldRutaDelArchivo.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        getContentPane().add(jTextFieldRutaDelArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 50, 310, 30));
+        getContentPane().add(jLabelCampoAOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
 
         jComboBoxCampoOrdenamiento.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jComboBoxCampoOrdenamiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "String", "Enteros", "Booleano", "Fecha" }));
@@ -91,32 +90,42 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jComboBoxCampoOrdenamientoActionPerformed(evt);
             }
         });
-        getContentPane().add(jComboBoxCampoOrdenamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 240, 220, -1));
+        getContentPane().add(jComboBoxCampoOrdenamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 110, 220, -1));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setText("Algoritmo:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 240, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 240, 30));
 
         jComboBoxAlgoritmo.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jComboBoxAlgoritmo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Intercalación Directa", "Intercalación Natural", "Intercalacion Polifasica", "" }));
+        jComboBoxAlgoritmo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Intercalación Directa", "Intercalación Natural" }));
         jComboBoxAlgoritmo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxAlgoritmoActionPerformed(evt);
             }
         });
-        getContentPane().add(jComboBoxAlgoritmo, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, 340, -1));
+        getContentPane().add(jComboBoxAlgoritmo, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 340, -1));
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel2.setText("Nombre del archivo:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
-
-        jTextFieldNombreArchivo.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jTextFieldNombreArchivo.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBotonBuscarRuta.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jButtonBotonBuscarRuta.setText("Buscar Archivo");
+        jButtonBotonBuscarRuta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldNombreArchivoActionPerformed(evt);
+                jButtonBotonBuscarRutaActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextFieldNombreArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 108, 340, 30));
+        getContentPane().add(jButtonBotonBuscarRuta, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, 130, 30));
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel2.setText("Veces a ejecutar:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, -1, -1));
+
+        jTextFieldVecesEjecutar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jTextFieldVecesEjecutar.setText("1");
+        jTextFieldVecesEjecutar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldVecesEjecutarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextFieldVecesEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 200, 140, 30));
 
         jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/fondo.png"))); // NOI18N
         jLabelFondo.setName("fondo"); // NOI18N
@@ -131,13 +140,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void jButtonRealizarOrdenamientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarOrdenamientoActionPerformed
 
-        ruta = jTextFieldRutaDelArchivo.getText()+"\\";
-        ruta=ruta+jTextFieldNombreArchivo.getText()+".csv";
+        //deno de cambiar y devolver la ruta ruta = jTextFieldRutaDelArchivo.getText()+"\\";
+        //ruta=ruta+jTextFieldNombreArchivo.getText()+".csv";
         campoOrdenamiento = jComboBoxCampoOrdenamiento.getSelectedItem().toString();
         algoritmo = jComboBoxAlgoritmo.getSelectedItem().toString();
-
-        Principal.ejecuccionOrdenamientosAlgoritmo();
-
+        try {
+            vecesOrdenar = Integer.parseInt(jTextFieldVecesEjecutar.getText());
+        } catch (NumberFormatException ex) {
+            ejecutar = false;
+            JOptionPane.showMessageDialog(null, "No es un tipo de dato numerico", "Error en el campo veces a ejecutar", JOptionPane.ERROR_MESSAGE);
+        }
+        if (ejecutar&&(vecesOrdenar>0)) {
+            Principal.ejecuccionOrdenamientosAlgoritmo();
+        }else{
+            JOptionPane.showMessageDialog(null,"No se puede ejecutar la informacion ingresada es incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_jButtonRealizarOrdenamientoActionPerformed
 
@@ -150,9 +167,22 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         algoritmo = jComboBoxAlgoritmo.getSelectedItem().toString();
     }//GEN-LAST:event_jComboBoxAlgoritmoActionPerformed
 
-    private void jTextFieldNombreArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNombreArchivoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldNombreArchivoActionPerformed
+    private void jButtonBotonBuscarRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBotonBuscarRutaActionPerformed
+        JFileChooser ventanaBusqueda = new JFileChooser();//Objeto ventana de busqueda
+        ventanaBusqueda.setFileSelectionMode(JFileChooser.FILES_ONLY);//Tipo de busqueda
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".CSV", "CSV");
+        ventanaBusqueda.setFileFilter(filter);//Extenciones
+        //ventanaBusqueda.setMultiSelectionEnabled(true);//Seleccionar varios archivos
+        int returnVal = ventanaBusqueda.showOpenDialog(null);//Condicional de aceptacion seleccion
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File archivo = ventanaBusqueda.getSelectedFile();
+            ruta = archivo.getAbsolutePath();
+        }
+    }//GEN-LAST:event_jButtonBotonBuscarRutaActionPerformed
+
+    private void jTextFieldVecesEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldVecesEjecutarActionPerformed
+       
+    }//GEN-LAST:event_jTextFieldVecesEjecutarActionPerformed
 
     public static String getCampoOrdenar() {
         return campoOrdenamiento;
@@ -164,6 +194,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     public static String getRuta() {
         return ruta;
+    }
+
+    public static int getVecesEjecutar() {
+        return vecesOrdenar;
     }
 
     /**
@@ -181,6 +215,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBotonBuscarRuta;
     private javax.swing.JButton jButtonRealizarOrdenamiento;
     private javax.swing.JButton jButtonSalirAplicacion;
     private javax.swing.JComboBox<String> jComboBoxAlgoritmo;
@@ -189,8 +224,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelCampoAOrdenar;
     private javax.swing.JLabel jLabelFondo;
-    private javax.swing.JLabel jLabelRutaDelArchivo;
-    private javax.swing.JTextField jTextFieldNombreArchivo;
-    private javax.swing.JTextField jTextFieldRutaDelArchivo;
+    private javax.swing.JTextField jTextFieldVecesEjecutar;
     // End of variables declaration//GEN-END:variables
 }

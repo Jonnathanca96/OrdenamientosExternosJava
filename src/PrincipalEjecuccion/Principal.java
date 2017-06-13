@@ -16,11 +16,14 @@ import InterNatural.*;
 import InterfazGrafica.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import CopiarArchivo.*;
 
 public class Principal {
 
     //private IntercalacionDirecta directa;
     private static boolean ejecuccionCorrecta;
+
+    private static int veces;
 
     private static ArrayList<Double> tiempo;
 
@@ -30,11 +33,9 @@ public class Principal {
 
     private static double tEjecuccion;
 
-    String algoritmoOrdenamiento = PantallaPrincipal.getAlgortimo();
+    private String algoritmoOrdenamiento = PantallaPrincipal.getAlgortimo();
 
-    String rutaArchivo = PantallaPrincipal.getRuta();
-
-    String campoOrdenar = PantallaPrincipal.getCampoOrdenar();
+    private String campoOrdenar = PantallaPrincipal.getCampoOrdenar();
 
     public static void main(String[] args) {
 
@@ -52,82 +53,90 @@ public class Principal {
     }
 
     public static void ejecuccionOrdenamientosAlgoritmo() {
-
-        IntercalacionDirecta directa;
-
-        IntercalacionNatural natural;
-
-        String algoritmoOrdenamiento = PantallaPrincipal.getAlgortimo();
-
+        
+        String copiaArchivoriginalRuta = "AchivosOrdenamiento/ficheroRespaldoOrdenar.CSV";
+        
         String rutaArchivo = PantallaPrincipal.getRuta();
 
-        String campoOrdenar = PantallaPrincipal.getCampoOrdenar();
+        if (CopiarArchivo.copyFile(rutaArchivo, copiaArchivoriginalRuta)==true) {
 
-        File archivo;
+            IntercalacionDirecta directa;
+            
+            IntercalacionNatural natural;
 
-        archivo = new File(rutaArchivo);
+            veces = PantallaPrincipal.getVecesEjecutar();
+            
+            String algoritmoOrdenamiento = PantallaPrincipal.getAlgortimo();
 
-        tiempo = new ArrayList<Double>();
+            String campoOrdenar = PantallaPrincipal.getCampoOrdenar();
 
-        if (archivo.exists()) {
-            switch (algoritmoOrdenamiento) {
-                case "Intercalación Directa":
+            File archivo= new File(copiaArchivoriginalRuta);
 
-                    for (int i = 0; i < 100; i++) {
-                        tinicio = (double) System.currentTimeMillis();
+            tiempo = new ArrayList<Double>();
 
-                        directa = new IntercalacionDirecta(campoOrdenar, archivo);
+            if (archivo.exists()) {
+                switch (algoritmoOrdenamiento) {
+                    case "Intercalación Directa":
 
-                        directa.ejecutarAlgoritmo();
+                        for (int i = 0; i < veces; i++) {
+                            tinicio = (double) System.currentTimeMillis();
+                            
+                            if(i==(veces-1)){
+                                archivo=new File(rutaArchivo);
+                            }
 
-                        tfin = (double) System.currentTimeMillis();
+                            directa = new IntercalacionDirecta(campoOrdenar, archivo);
 
-                        tEjecuccion = tfin - tinicio;
+                            directa.ejecutarAlgoritmo();
+         
+                            tfin = (double) System.currentTimeMillis();
 
-                        tiempo.add(tEjecuccion);
-                    }
+                            tEjecuccion = tfin - tinicio;
 
-                    JOptionPane.showMessageDialog(null, "Ordenamiento finalizado\n"
-                            + "El tiempo promedio de 100 ejecucciones es: " + tiempoPromedio(tiempo) + " milisegundos", "", JOptionPane.INFORMATION_MESSAGE);
+                            tiempo.add(tEjecuccion);
+                        }
+                        
+                        mensajePantalla(tiempo);
+                        tiempo.clear();
+                        break;
 
-                    tiempo.clear();
-                    break;
+                    case "Intercalación Natural":
+                        
+                        for (int i = 0; i < veces; i++) {
+                            tinicio = (double) System.currentTimeMillis();
 
-                case "Intercalación Natural":
+                            if(i==(veces-1)){
+                                archivo=new File(rutaArchivo);
+                            }
+                            
+                            natural = new IntercalacionNatural(campoOrdenar, archivo);
 
-                    for (int i = 0; i < 100; i++) {
-                        tinicio = (double) System.currentTimeMillis();
+                            natural.ejecutarAlgoritmo();
 
-                        natural = new IntercalacionNatural(campoOrdenar, archivo);
+                            tfin = (double) System.currentTimeMillis();
 
-                        natural.ejecutarAlgoritmo();
+                            tEjecuccion = tfin - tinicio;
 
-                        tfin = (double) System.currentTimeMillis();
+                            tiempo.add(tEjecuccion);
 
-                        tEjecuccion = tfin - tinicio;
+                        }
+                        mensajePantalla(tiempo);
+                        
+                        tiempo.clear();
 
-                        tiempo.add(tEjecuccion);
+                        break;
+                }
 
-                    }
-
-                    JOptionPane.showMessageDialog(null, "Ordenamiento finalizado\n"
-                            + "El tiempo promedio de 100 ejecucciones es: " + tiempoPromedio(tiempo) + " milisegundos", "", JOptionPane.INFORMATION_MESSAGE);
-
-                    tiempo.clear();
-
-                    break;
-
-                case "Intercalacion Polifasica":
-                    System.out.println("hola");//Falta el codigo para poner 
-                    break;
-            }
-
-        } else {
-
-            JOptionPane.showMessageDialog(null, "El archivo no se encuentra la ruta es incorrecta");
+            } 
 
         }
 
     }
-
+    
+    
+    public static void mensajePantalla(ArrayList<Double> tiempo){
+    JOptionPane.showMessageDialog(null, "Ordenamiento finalizado\n"
+                                + "El tiempo promedio de "+veces+" ejecucciones es: " + tiempoPromedio(tiempo) + " milisegundos", "", JOptionPane.INFORMATION_MESSAGE);
+    
+    }
 }

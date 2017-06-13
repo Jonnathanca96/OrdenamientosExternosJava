@@ -18,19 +18,20 @@ public class InterNaturalBooleanos {
 
     public void ejecutar() {
 
-        File F1 = new File("AchivosOrdenamiento/fichero_aux_1.CSV");
+        File f1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
 
-        File F2 = new File("AchivosOrdenamiento/fichero_aux_2.CSV");
+        File f2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
 
         try {
-            ordenar(archivo, F1, F2);
+            ordenar(archivo, f1, f2);
         } catch (FileNotFoundException except) {
             JOptionPane.showMessageDialog(null, "Archivo no encontrado", "", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException except) {
             JOptionPane.showMessageDialog(null, "Error de ejecución", "", JOptionPane.INFORMATION_MESSAGE);
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
         //JOptionPane.showMessageDialog(null, "Ordenamiento finalizado!", "", JOptionPane.INFORMATION_MESSAGE);
-
     }
 
     private int contarRegistros(File F) throws FileNotFoundException, IOException {
@@ -44,12 +45,10 @@ public class InterNaturalBooleanos {
         return index;
     }
 
-    private void ordenar(File F, File F1, File F2) throws FileNotFoundException, IOException {
-
+    private void ordenar(File F, File F1, File F2) throws Exception {
         while (particion(F, F1, F2)) {
             fusion(F, F1, F2);
         }
-
     }
 
     //Metodo para generar particiones de secuencias
@@ -66,7 +65,7 @@ public class InterNaturalBooleanos {
         Archivo.readHeaders();
         Auxiliares[0].writeRecord(Archivo.getHeaders());
         Auxiliares[1].writeRecord(Archivo.getHeaders());
-
+        
         while (Archivo.readRecord()) {
             anterior = actual;
             actual = Archivo.get(2);
@@ -84,7 +83,7 @@ public class InterNaturalBooleanos {
         Auxiliares[1].flush();
         Auxiliares[0].close();
         Auxiliares[1].close();
-
+        
         return hayCambioDeSecuencia;
     }
 
@@ -104,7 +103,7 @@ public class InterNaturalBooleanos {
         Auxiliares[0].readHeaders();
         Auxiliares[1].readHeaders();
         Archivo.writeRecord(Auxiliares[0].getHeaders());
-
+        
         while (contAux1 > 0 && contAux2 > 0) {
             if (anterior[0] == null && anterior[1] == null) {
                 Auxiliares[0].readRecord();
@@ -124,8 +123,8 @@ public class InterNaturalBooleanos {
                 save(Archivo, Auxiliares[indexArchivo]);
 
                 anterior[indexArchivo] = actual[indexArchivo];
-                if (indexArchivo == 0) {
-                    if (contAux1 > 0) {
+                if(indexArchivo==0){
+                    if (contAux1>0) {
                         Auxiliares[0].readRecord();
                         actual[0] = Auxiliares[0].get(2);
                         contAux1--;
@@ -134,8 +133,8 @@ public class InterNaturalBooleanos {
                         break;
                     }
                 }
-                if (indexArchivo == 1) {
-                    if (contAux2 > 0) {
+                if(indexArchivo==1){
+                    if (contAux2>0) {
                         Auxiliares[1].readRecord();
                         actual[1] = Auxiliares[1].get(2);
                         contAux2--;
@@ -145,13 +144,13 @@ public class InterNaturalBooleanos {
                     }
                 }
             }
-
-            if (indexArchivo == 0) {
+            
+            if(indexArchivo == 0 ){
                 //while (anterior[1].compareTo(actual[1]) <= 0) {
                 while (anterior[1].compareTo(actual[1]) <= 0) {
                     save(Archivo, Auxiliares[1]);
                     anterior[1] = actual[1];
-                    if (contAux2 > 0) {
+                    if (contAux2>0) {
                         Auxiliares[1].readRecord();
                         actual[1] = Auxiliares[1].get(2);
                         contAux2--;
@@ -161,12 +160,12 @@ public class InterNaturalBooleanos {
                     }
                 }
             }
-            if (indexArchivo == 1) {
+            if(indexArchivo == 1){
                 //while (anterior[0].compareTo(actual[0]) <= 0) {
                 while (anterior[0].compareTo(actual[0]) <= 0) {
                     save(Archivo, Auxiliares[0]);
                     anterior[0] = actual[0];
-                    if (contAux1 > 0) {
+                    if (contAux1>0) {
                         Auxiliares[0].readRecord();
                         actual[0] = Auxiliares[0].get(2);
                         contAux1--;
@@ -177,10 +176,11 @@ public class InterNaturalBooleanos {
                 }
             }
 
+
         }
         if (!finArchivo[0]) {
             save(Archivo, Auxiliares[0]);
-            while (contAux1 > 0) {
+            while (contAux1>0) {
                 Auxiliares[0].readRecord();
                 save(Archivo, Auxiliares[0]);
                 contAux1--;
@@ -189,7 +189,7 @@ public class InterNaturalBooleanos {
 
         if (!finArchivo[1]) {
             save(Archivo, Auxiliares[1]);
-            while (contAux2 > 0) {
+            while (contAux2>0) {
                 Auxiliares[1].readRecord();
                 save(Archivo, Auxiliares[1]);
                 contAux2--;
@@ -200,8 +200,8 @@ public class InterNaturalBooleanos {
         Archivo.flush();
         Archivo.close();
     }
-
-    private void save(CsvWriter write, CsvReader read) throws IOException {
+    
+    private void save (CsvWriter write, CsvReader read) throws IOException {
         campos[0] = read.get(0);
         campos[1] = read.get(1);
         campos[2] = read.get(2);

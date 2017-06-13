@@ -10,6 +10,8 @@ public class InterDirectaCadenas {
 
     public InterDirectaCadenas(File archivo) {
         this.archivo = archivo;
+        
+        JOptionPane.showMessageDialog(null, archivo.getAbsolutePath());
     }
 
     private String[] arreglo = new String[4];
@@ -17,8 +19,8 @@ public class InterDirectaCadenas {
     public void ejecutar() {
 
         
-            File file1 = new File("AchivosOrdenamiento/fichero_aux_1.CSV");
-            File file2 = new File("AchivosOrdenamiento/fichero_aux_2.CSV");
+            File file1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
+            File file2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
 
             try {
                 int n = contarRegistros(archivo);
@@ -28,14 +30,11 @@ public class InterDirectaCadenas {
             }catch(IOException except){
                 JOptionPane.showMessageDialog(null, "Error de ejecución", "", JOptionPane.INFORMATION_MESSAGE); 
             }
-            
-
-            //JOptionPane.showMessageDialog(null, "Ordenamiento finalizado..", "", JOptionPane.INFORMATION_MESSAGE);
-
+           
         
     }
 
-    private int contarRegistros(File F) throws FileNotFoundException, IOException {
+    private int contarRegistros(File F) throws FileNotFoundException, IOException{
         CsvReader BR = new CsvReader(new FileReader(F), ',');
         int n = 0;
         BR.readHeaders();
@@ -44,19 +43,19 @@ public class InterDirectaCadenas {
         }
         return n;
     }
-
-    private void MezclaDirecta(File F, File F1, File F2, int n) throws FileNotFoundException, IOException {
+    
+    private void MezclaDirecta (File F, File F1, File F2, int n) throws FileNotFoundException, IOException {
         int part = 1;
-        while (part <= ((int) ((n + 1) / 2))) {
+        while (part <= ((int)((n+1)/2))){
             Particiona(F, F1, F2, part);
             Fusiona(F, F1, F2, part);
-            part *= 2;
+            part *=  2;
         }
         Particiona(F, F1, F2, part);
         Fusiona(F, F1, F2, part);
     }
-
-    private void Particiona(File F, File F1, File F2, int part) throws FileNotFoundException, IOException {
+    
+    private void Particiona (File F, File F1, File F2, int part) throws FileNotFoundException, IOException {
         CsvReader f = new CsvReader(new FileReader(F), ',');
         CsvWriter f1 = new CsvWriter(new FileWriter(F1), ',');
         CsvWriter f2 = new CsvWriter(new FileWriter(F2), ',');
@@ -64,17 +63,17 @@ public class InterDirectaCadenas {
         f.readHeaders();
         f1.writeRecord(f.getHeaders());
         f2.writeRecord(f.getHeaders());
-
+        
         boolean is_end = f.readRecord();
-        while (is_end) {
+        while(is_end){
             k = 0;
-            while ((k < part) && is_end) {
+            while ((k < part) && is_end){
                 save(f1, f);
                 k++;
                 is_end = f.readRecord();
-            }
+            } 
             l = 0;
-            while ((l < part) && is_end) {
+            while ((l < part) && is_end){
                 save(f2, f);
                 l++;
                 is_end = f.readRecord();
@@ -86,8 +85,8 @@ public class InterDirectaCadenas {
         f2.close();
         f.close();
     }
-
-    private void Fusiona(File F, File F1, File F2, int part) throws FileNotFoundException, IOException {
+    
+    private void Fusiona (File F, File F1, File F2, int part) throws FileNotFoundException, IOException {
         CsvWriter f = new CsvWriter(new FileWriter(F), ',');
         CsvReader f1 = new CsvReader(new FileReader(F1), ',');
         CsvReader f2 = new CsvReader(new FileReader(F2), ',');
@@ -96,25 +95,25 @@ public class InterDirectaCadenas {
         f1.readHeaders();
         f2.readHeaders();
         f.writeRecord(f1.getHeaders());
-
+        
         is_end_f1 = f1.readRecord();
-        if (is_end_f1) {
+        if (is_end_f1){
             B1 = false;
         }
         is_end_f2 = f2.readRecord();
-        if (is_end_f2) {
+        if (is_end_f2){
             B2 = false;
         }
-        while ((is_end_f1 || (B1 == false)) && (is_end_f2 || (B2 == false))) {
+        while((is_end_f1 || (B1 == false)) && (is_end_f2 || (B2 == false))){
             k = l = 0;
-            while (((k < part) && (B1 == false)) && ((l < part) && (B2 == false))) {
+            while(((k < part) && (B1 == false)) && ((l < part) && (B2 == false))){
                 //if (Integer.parseInt(f1.get(0)) <= Integer.parseInt(f2.get(0))) {
                 if (f1.get(1).compareTo(f2.get(1)) <= 0) {
                     save(f, f1);
                     B1 = true;
                     k++;
                     is_end_f1 = f1.readRecord();
-                    if (is_end_f1) {
+                    if (is_end_f1){
                         B1 = false;
                     }
                 } else {
@@ -122,43 +121,43 @@ public class InterDirectaCadenas {
                     B2 = true;
                     l++;
                     is_end_f2 = f2.readRecord();
-                    if (is_end_f2) {
+                    if (is_end_f2){
                         B2 = false;
                     }
                 }
             }
-            while ((k < part) && (B1 == false)) {
+            while((k < part) && (B1 == false)) {
                 save(f, f1);
                 B1 = true;
                 k++;
                 is_end_f1 = f1.readRecord();
-                if (is_end_f1) {
+                if (is_end_f1){
                     B1 = false;
                 }
             }
-            while ((l < part) && (B2 == false)) {
+            while((l < part) && (B2 == false)) {
                 save(f, f2);
                 B2 = true;
                 l++;
                 is_end_f2 = f2.readRecord();
-                if (is_end_f2) {
+                if (is_end_f2){
                     B2 = false;
                 }
             }
         }
-        if (B1 == false) {
+        if (B1 == false){
             save(f, f1);
         }
         if (B2 == false) {
             save(f, f2);
         }
         is_end_f1 = f1.readRecord();
-        while (is_end_f1) {
+        while(is_end_f1) {
             save(f, f1);
             is_end_f1 = f1.readRecord();
         }
         is_end_f2 = f2.readRecord();
-        while (is_end_f2) {
+        while(is_end_f2) {
             save(f, f2);
             is_end_f2 = f2.readRecord();
         }
@@ -167,8 +166,8 @@ public class InterDirectaCadenas {
         f2.close();
         f.close();
     }
-
-    private void save(CsvWriter write, CsvReader read) throws IOException {
+    
+    private void save (CsvWriter write, CsvReader read) throws IOException {
         arreglo[0] = read.get(0);
         arreglo[1] = read.get(1);
         arreglo[2] = read.get(2);
@@ -176,4 +175,3 @@ public class InterDirectaCadenas {
         write.writeRecord(arreglo);
     }
 }
-

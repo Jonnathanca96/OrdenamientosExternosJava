@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 
 public class IntercalacionDirecta {
 
-    public static String campoOrdenar = "";
+    public  static String campoOrdenar ;
 
-    private static File archivo = null;
+    private static File archivo;
 
     public IntercalacionDirecta(String campoOrdenar, File archivo) {
         this.campoOrdenar = campoOrdenar;
@@ -30,25 +30,28 @@ public class IntercalacionDirecta {
             case "String":
                 ordCadenas = new InterDirectaCadenas(archivo);
                 ordCadenas.ejecutar();
+                break;
                 
 
             case "Enteros":
                 ordEnteros = new InterDirectaEnteros(archivo);
                 ordEnteros.ejecutar();
-                
+                break;
 
             case "Booleano":
                 ordBoolean = new InterDirectaBoleanos(archivo);
                 ordBoolean.ejecutar();
-                
+                break;
 
             case "Fecha":
                 ordFechas = new InterDirectaFechas(archivo);
 
                 ordFechas.ejecutar();
-
+                
+                break;
                 
         }
         
     }
+    
 }
