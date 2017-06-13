@@ -17,6 +17,7 @@ import InterfazGrafica.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import CopiarArchivo.*;
+import java.awt.Desktop;
 
 public class Principal {
 
@@ -98,6 +99,7 @@ public class Principal {
                         
                         mensajePantalla(tiempo);
                         tiempo.clear();
+                        abrirArchivo(archivo);
                         break;
 
                     case "Intercalación Natural":
@@ -123,7 +125,9 @@ public class Principal {
                         mensajePantalla(tiempo);
                         
                         tiempo.clear();
-
+                        
+                        abrirArchivo(archivo);
+                        
                         break;
                 }
 
@@ -137,6 +141,17 @@ public class Principal {
     public static void mensajePantalla(ArrayList<Double> tiempo){
     JOptionPane.showMessageDialog(null, "Ordenamiento finalizado\n"
                                 + "El tiempo promedio de "+veces+" ejecucciones es: " + tiempoPromedio(tiempo) + " milisegundos", "", JOptionPane.INFORMATION_MESSAGE);
+    
+    }
+    
+    public static void abrirArchivo(File especificarArchivo){
+        try {
+
+            Desktop.getDesktop().open(especificarArchivo);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     
     }
 }
