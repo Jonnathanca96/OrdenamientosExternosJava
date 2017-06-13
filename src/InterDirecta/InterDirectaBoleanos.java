@@ -34,23 +34,23 @@ public class InterDirectaBoleanos {
 
      private static int contarRegistros(File F) throws FileNotFoundException, IOException{
         CsvReader BR = new CsvReader(new FileReader(F), ',');
-        int n = 0;
+        int contador = 0;
         BR.readHeaders();
         while (BR.readRecord()) {
-            n++;
+            contador++;
         }
-        return n;
+        return contador;
     }
     
-    private static void MezclaDirecta (File F, File F1, File F2, int n) throws FileNotFoundException, IOException {
+    private static void MezclaDirecta (File file, File file1, File file2, int n) throws FileNotFoundException, IOException {
         int part = 1;
         while (part <= ((int)((n+1)/2))){
-            Particiona(F, F1, F2, part);
-            Fusiona(F, F1, F2, part);
+            Particiona(file, file1, file2, part);
+            Fusiona(file, file1, file2, part);
             part *=  2;
         }
-        Particiona(F, F1, F2, part);
-        Fusiona(F, F1, F2, part);
+        Particiona(file, file1, file2, part);
+        Fusiona(file, file1, file2, part);
     }
     
     private static void Particiona (File F, File F1, File F2, int part) throws FileNotFoundException, IOException {

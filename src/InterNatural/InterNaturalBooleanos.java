@@ -18,12 +18,12 @@ public class InterNaturalBooleanos {
 
     public void ejecutar() {
 
-        File f1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
+        File file1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
 
-        File f2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
+        File file2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
 
         try {
-            ordenar(archivo, f1, f2);
+            ordenar(archivo, file1, file2);
         } catch (FileNotFoundException except) {
             JOptionPane.showMessageDialog(null, "Archivo no encontrado", "", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException except) {
@@ -31,7 +31,6 @@ public class InterNaturalBooleanos {
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        //JOptionPane.showMessageDialog(null, "Ordenamiento finalizado!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private int contarRegistros(File F) throws FileNotFoundException, IOException {

@@ -23,8 +23,8 @@ public class InterDirectaCadenas {
             File file2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
 
             try {
-                int n = contarRegistros(archivo);
-                MezclaDirecta(archivo, file1, file2, n);
+                int contar = contarRegistros(archivo);
+                MezclaDirecta(archivo, file1, file2, contar);
             }catch(FileNotFoundException except){
                 JOptionPane.showMessageDialog(null, "Archivo no encontrado", "", JOptionPane.INFORMATION_MESSAGE);
             }catch(IOException except){
@@ -36,12 +36,12 @@ public class InterDirectaCadenas {
 
     private int contarRegistros(File F) throws FileNotFoundException, IOException{
         CsvReader BR = new CsvReader(new FileReader(F), ',');
-        int n = 0;
+        int contador = 0;
         BR.readHeaders();
         while (BR.readRecord()) {
-            n++;
+            contador++;
         }
-        return n;
+        return contador;
     }
     
     private void MezclaDirecta (File F, File F1, File F2, int n) throws FileNotFoundException, IOException {

@@ -15,11 +15,11 @@ public class InterNaturalEnteros {
     private final String[] campos = new String[4];
 
     public void ejecutar() {
-        File F1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
+        File file1 = new File("AchivosOrdenamiento/archivo_auxiliar1.CSV");
 
-        File F2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
+        File file2 = new File("AchivosOrdenamiento/archivo_auxiliar2.CSV");
         try {
-            ordenar(archivo, F1, F2);
+            ordenar(archivo, file1, file2);
         } catch (FileNotFoundException except) {
             JOptionPane.showMessageDialog(null, "Archivo no encontrado", "", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException except) {
